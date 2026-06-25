@@ -1,0 +1,18 @@
+name: Tests Python
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - run: pip install pytest flake8 black
+      - run: flake8 app_functions.py test_app.py
+      - run: black --check app_functions.py test_app.py
+      - run: pytest test_app.py

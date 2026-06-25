@@ -1,20 +1,21 @@
 import streamlit as st
+import requests
 
 st.title("Convertisseur de devises")
 
-rates = {
-    "EUR": 1,
-    "USD": 1.1,
-    "JPY": 130,
-    "TND": 3.37
-}
+API_KEY = "96c3c6cdd2e5fb7dcd8b5726"
+
+url = f"https://v6.exchangerate-api.com/v6/{API_KEY}/latest/EUR"
+response = requests.get(url)
+data = response.json()
+rates = data["conversion_rates"]
 
 if "historique" not in st.session_state:
     st.session_state.historique = []
 
 amount = st.number_input("Montant :", min_value=0.0, format="%.2f")
-from_currency = st.selectbox("De :", rates.keys())
-to_currency = st.selectbox("Vers :", rates.keys())
+from_currency = st.selectbox("De :", list(rates.keys()))
+to_currency = st.selectbox("Vers :", list(rates.keys()))
 
 if st.button("Convertir"):
     if amount <= 0 :

@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+from app_functions import convert
 
 st.title("Convertisseur de devises")
 
@@ -18,22 +19,22 @@ from_currency = st.selectbox("De :", list(rates.keys()))
 to_currency = st.selectbox("Vers :", list(rates.keys()))
 
 if st.button("Convertir"):
-    if amount <= 0 :
+    result = convert(amount, from_currency, to_currency, rates)
+    if result is None:
         st.error("Veuillez saisir une valeur supérieure à 0.")
-    elif from_currency == to_currency :
+    elif from_currency == to_currency:
         st.error("Veuillez sélectionner 2 devises différentes.")
-    else :
-        result = amount * rates[to_currency] / rates[from_currency]
+    else:
         st.success(f"{amount} {from_currency} = {result:.2f} {to_currency}")
         st.session_state.historique.insert(0, f"{amount} {from_currency} = {result:.2f} {to_currency}")
 
 if st.button("Échanger"):
-    if amount <= 0 :
+    result = convert(amount, to_currency, from_currency, rates)
+    if result is None:
         st.error("Veuillez saisir une valeur supérieure à 0.")
-    elif from_currency == to_currency :
+    elif from_currency == to_currency:
         st.error("Veuillez sélectionner 2 devises différentes.")
-    else :
-        result = amount * rates[from_currency] / rates[to_currency]
+    else:
         st.success(f"{amount:.2f} {to_currency} = {result:.2f} {from_currency}")
         st.session_state.historique.insert(0, f"{amount:.2f} {to_currency} = {result:.2f} {from_currency}")
 
